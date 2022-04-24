@@ -2,9 +2,11 @@ package api
 
 import (
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/samber/lo"
 )
 
 var validate = validator.New()
@@ -19,18 +21,33 @@ func NewQuery(q string) *QueryCond {
 	}
 }
 
-func (qc *QueryCond) SetCategory(q string) *QueryCond {
-	qc.Categories = q
+func (qc *QueryCond) SetCategory(qs ...string) *QueryCond {
+	qc.Categories = strings.Join([]string{
+		lo.Ternary(lo.Contains(qs, CategoryGeneral), "1", "0"),
+		lo.Ternary(lo.Contains(qs, CategoryAnime), "1", "0"),
+		lo.Ternary(lo.Contains(qs, CategoryPeople), "1", "0"),
+	}, "")
 	return qc
 }
 
-func (qc *QueryCond) SetPurity(q string) *QueryCond {
-	qc.Purity = q
+func (qc *QueryCond) SetPurity(qs ...string) *QueryCond {
+	qc.Purity = strings.Join([]string{
+		lo.Ternary(lo.Contains(qs, PuritySFW), "1", "0"),
+		lo.Ternary(lo.Contains(qs, PuritySketchy), "1", "0"),
+		lo.Ternary(lo.Contains(qs, PurityNSFW), "1", "0"),
+	}, "")
+	return qc
+}
+
+func (qc *QueryCond) SetRatio(q string) *QueryCond {
+	qc.Ratios = q
 	return qc
 }
 
 func (qc *QueryCond) SortBy(q string) *QueryCond {
-	qc.Sorting = q
+	if q != "" {
+		qc.Sorting = q
+	}
 	return qc
 }
 

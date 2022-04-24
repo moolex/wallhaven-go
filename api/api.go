@@ -61,7 +61,11 @@ func (s *API) Query(qc *QueryCond) (*QueryResult, error) {
 		qr.api = s
 		qr.cond = qc
 
-		s.log.With(zap.String("url", resp.Request.URL), zap.String("status", resp.Status())).Debug("query done")
+		s.log.With(
+			zap.String("status", resp.Status()),
+			zap.Int("total", qr.Meta.Total),
+			zap.Int("curr_page", qr.Meta.CurrentPage),
+		).Debug("query done")
 		return qr, nil
 	}
 

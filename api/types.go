@@ -25,6 +25,8 @@ const (
 	Range3months    = 3 * Range1month
 	Range6months    = 6 * Range1month
 	Range1year      = 12 * Range1month
+	RatioLandscape  = "landscape"
+	RatioPortrait   = "portrait"
 	ThumbSmall      = "small"
 	ThumbLarge      = "large"
 	ThumbOriginal   = "original"
@@ -75,8 +77,8 @@ type Wallpaper struct {
 
 type QueryCond struct {
 	Query       string
-	Categories  string `validate:"omitempty,oneof=general anime people"`
-	Purity      string `validate:"omitempty,oneof=sfw sketchy nsfw"`
+	Categories  string
+	Purity      string
 	Sorting     string `validate:"oneof=date_added relevance random views favorites toplist"`
 	Order       string `validate:"oneof=desc asc"`
 	TopRange    string `validate:"oneof=1d 3d 1w 1M 3M 6M 1y"`
@@ -98,7 +100,6 @@ type QueryResult struct {
 	Meta struct {
 		CurrentPage int `json:"current_page"`
 		LastPage    int `json:"last_page"`
-		PerPage     int `json:"per_page"`
 		Total       int `json:"total"`
 	} `json:"meta"`
 }
