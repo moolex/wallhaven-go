@@ -7,12 +7,13 @@ import (
 )
 
 var (
+	ErrNoSuchItems = errors.New("no such items")
 	ErrNoMoreItems = errors.New("no more items")
 )
 
 func (qr *QueryResult) Pick() (*Wallpaper, error) {
 	if qr.Meta.Total == 0 || len(qr.Data) == 0 {
-		return nil, ErrNoMoreItems
+		return nil, ErrNoSuchItems
 	}
 
 	qr.pLock.Lock()
@@ -28,7 +29,12 @@ func (qr *QueryResult) Pick() (*Wallpaper, error) {
 	w := qr.Data[qr.pIdx]
 	qr.pIdx++
 
-	qr.api.log.With(zap.String("id", w.Id)).Debug("picked wallpaper")
+	qr.api.log.With(
+		zap.String("id", w.Id),
+		zap.Int("size", w.FileSize),
+		zap.String("type", w.FileType),
+		zap.String("resolution", w.Resolution),
+	).Debug("picked wallpaper")
 	return w, nil
 }
 

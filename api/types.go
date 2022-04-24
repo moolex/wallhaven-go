@@ -77,9 +77,9 @@ type Wallpaper struct {
 
 type QueryCond struct {
 	Query       string
-	Categories  string
-	Purity      string
-	Sorting     string `validate:"oneof=date_added relevance random views favorites toplist"`
+	Categories  string `validate:"oneof=000 001 010 011 100 101 110 111"`
+	Purity      string `validate:"oneof=000 001 010 011 100 101 110 111"`
+	Sorting     string `validate:"oneof=date_added relevance random views favorites toplist hot"`
 	Order       string `validate:"oneof=desc asc"`
 	TopRange    string `validate:"oneof=1d 3d 1w 1M 3M 6M 1y"`
 	AtLeast     string

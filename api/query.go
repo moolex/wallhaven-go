@@ -1,6 +1,7 @@
 package api
 
 import (
+	"math/rand"
 	"strconv"
 	"strings"
 	"time"
@@ -75,6 +76,20 @@ func (qc *QueryCond) TopList(timeRange time.Duration) *QueryCond {
 	if qc.TopRange == "" {
 		qc.TopRange = "1y"
 	}
+
+	return qc
+}
+
+func (qc *QueryCond) Random() *QueryCond {
+	qc.SortBy(SortRandom)
+
+	cs := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
+	bs := make([]rune, 6)
+	for i := range bs {
+		bs[i] = cs[rand.Intn(len(cs))]
+	}
+
+	qc.Seed = string(bs)
 
 	return qc
 }

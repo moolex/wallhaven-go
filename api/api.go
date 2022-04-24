@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
@@ -64,7 +65,12 @@ func (s *API) Query(qc *QueryCond) (*QueryResult, error) {
 		s.log.With(
 			zap.String("status", resp.Status()),
 			zap.Int("total", qr.Meta.Total),
-			zap.Int("curr_page", qr.Meta.CurrentPage),
+			zap.String("page", fmt.Sprintf("%d/%d", qr.Meta.CurrentPage, qr.Meta.LastPage)),
+			zap.String("ratelimit", fmt.Sprintf(
+				"%s/%s",
+				resp.Header().Get("x-ratelimit-remaining"),
+				resp.Header().Get("x-ratelimit-limit"),
+			)),
 		).Debug("query done")
 		return qr, nil
 	}
