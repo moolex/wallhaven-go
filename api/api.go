@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-resty/resty/v2"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -33,9 +32,7 @@ func (s *API) SetDebug() {
 }
 
 func (s *API) SetLogger(l *zap.Logger) {
-	s.log = s.log.WithOptions(zap.WrapCore(func(core zapcore.Core) zapcore.Core {
-		return l.Core()
-	}))
+	s.log = l
 }
 
 func (s *API) Query(qc *QueryCond) (*QueryResult, error) {
