@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 
 	"go.uber.org/zap"
 )
@@ -31,9 +32,10 @@ func (qr *QueryResult) Pick() (*Wallpaper, error) {
 
 	qr.api.log.With(
 		zap.String("id", w.Id),
-		zap.Int("size", w.FileSize),
-		zap.String("type", w.FileType),
-		zap.String("resolution", w.Resolution),
+		zap.String("category", w.Category),
+		zap.String("purity", w.Purity),
+		zap.Int("views", w.Views),
+		zap.String("index", fmt.Sprintf("%d/%d", qr.pIdx, size)),
 	).Debug("picked wallpaper")
 	return w, nil
 }

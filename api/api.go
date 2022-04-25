@@ -71,7 +71,7 @@ func (s *API) Query(qc *QueryCond) (*QueryResult, error) {
 				resp.Header().Get("x-ratelimit-remaining"),
 				resp.Header().Get("x-ratelimit-limit"),
 			)),
-		).Debug("query done")
+		).Debug("api query done")
 		return qr, nil
 	}
 
