@@ -3,7 +3,10 @@ package api
 import (
 	"errors"
 	"fmt"
+	"math/rand"
+	"time"
 
+	"github.com/samber/lo"
 	"go.uber.org/zap"
 )
 
@@ -12,7 +15,24 @@ var (
 	ErrNoMoreItems = errors.New("no more items")
 )
 
-func (qr *QueryResult) Pick() (*Wallpaper, error) {
+type PickOption = func(qr *QueryResult)
+
+func PickLoop(qr *QueryResult) {
+	qr.pickLoop = true
+}
+
+func PickRand(qr *QueryResult) {
+	qr.pickRand.Do(func() {
+		rand.Seed(time.Now().UnixNano())
+		lo.Shuffle(qr.Data)
+	})
+}
+
+func (qr *QueryResult) Pick(opts ...PickOption) (*Wallpaper, error) {
+	for _, opt := range opts {
+		opt(qr)
+	}
+
 	if qr.Meta.Total == 0 || len(qr.Data) == 0 {
 		return nil, ErrNoSuchItems
 	}
@@ -42,7 +62,11 @@ func (qr *QueryResult) Pick() (*Wallpaper, error) {
 
 func (qr *QueryResult) loadNext() error {
 	if qr.Meta.CurrentPage == qr.Meta.LastPage {
-		return ErrNoMoreItems
+		if qr.pickLoop {
+			qr.cond.Page = 0
+		} else {
+			return ErrNoMoreItems
+		}
 	}
 
 	qc := qr.cond

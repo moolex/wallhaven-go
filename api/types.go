@@ -96,6 +96,9 @@ type QueryResult struct {
 	pIdx  int
 	pLock sync.Mutex
 
+	pickLoop bool
+	pickRand sync.Once
+
 	Data []*Wallpaper `json:"data"`
 	Meta struct {
 		CurrentPage int `json:"current_page"`

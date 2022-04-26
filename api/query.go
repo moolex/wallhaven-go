@@ -83,6 +83,7 @@ func (qc *QueryCond) TopList(timeRange time.Duration) *QueryCond {
 func (qc *QueryCond) Random() *QueryCond {
 	qc.SortBy(SortRandom)
 
+	rand.Seed(time.Now().UnixNano())
 	cs := []rune("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789")
 	bs := make([]rune, 6)
 	for i := range bs {
