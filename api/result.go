@@ -2,7 +2,6 @@ package api
 
 import (
 	"errors"
-	"fmt"
 	"math/rand"
 	"time"
 
@@ -28,6 +27,10 @@ func PickRand(qr *QueryResult) {
 	})
 }
 
+func (qr *QueryResult) Index() int {
+	return qr.pIdx
+}
+
 func (qr *QueryResult) Pick(opts ...PickOption) (*Wallpaper, error) {
 	for _, opt := range opts {
 		opt(qr)
@@ -50,13 +53,6 @@ func (qr *QueryResult) Pick(opts ...PickOption) (*Wallpaper, error) {
 	w := qr.Data[qr.pIdx]
 	qr.pIdx++
 
-	qr.api.log.With(
-		zap.String("id", w.Id),
-		zap.String("category", w.Category),
-		zap.String("purity", w.Purity),
-		zap.Int("views", w.Views),
-		zap.String("index", fmt.Sprintf("%d/%d", qr.pIdx, size)),
-	).Debug("picked wallpaper")
 	return w, nil
 }
 

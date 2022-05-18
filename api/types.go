@@ -99,6 +99,9 @@ type QueryResult struct {
 	pickLoop bool
 	pickRand sync.Once
 
+	RateLimitQuota  int
+	RateLimitRemain int
+
 	Data []*Wallpaper `json:"data"`
 	Meta struct {
 		CurrentPage int `json:"current_page"`
